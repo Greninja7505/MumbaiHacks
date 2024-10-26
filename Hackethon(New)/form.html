@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Visualization Dashboard - India</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        /* Previous styles remain the same */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f3f4f6;
+            --text-color: #1f2937;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background-color: white;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        /* Add new styles for better dropdown experience */
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234b5563' viewBox='0 0 16 16'%3E%3Cpath d='M8 11l-7-7h14l-7 7z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Crime Against Women Visualization - India</h1>
+        
+        <form action="/visualize" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="state">State:</label>
+                <select name="state" id="state" required>
+                    <option value="">Select State</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                    <!-- Union Territories -->
+                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                    <option value="Daman and Diu">Daman and Diu</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Ladakh">Ladakh</option>
+                    <option value="Lakshadweep">Lakshadweep</option>
+                    <option value="Puducherry">Puducherry</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="district">District:</label>
+                <select name="district" id="district" required>
+                    <option value="">Select State First</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="reg_circle">Registration Circle:</label>
+                <select name="reg_circle" id="reg_circle" required>
+                    <option value="">Select District First</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="crime_type">Crime Type:</label>
+                <select name="crime_type" id="crime_type" multiple>
+                    <option value="murder_rape">Murder with Rape</option>
+                    <option value="dowry_deaths">Dowry Deaths</option>
+                    <option value="suicide_abetment">Suicide Abetment</option>
+                    <option value="miscarriage">Miscarriage</option>
+                    <option value="acid_attack">Acid Attack</option>
+                    <option value="domestic_cruelty">Domestic Cruelty</option>
+                    <option value="kidnapping">Kidnapping</option>
+                    <option value="trafficking">Trafficking</option>
+                    <option value="rape_above_18">Rape (Above 18)</option>
+                    <option value="rape_below_18">Rape (Below 18)</option>
+                    <option value="assault">Assault</option>
+                    <option value="domestic_violence">Domestic Violence</option>
+                    <option value="child_sexual_assault">Child Sexual Assault</option>
+                    <option value="harassment">Harassment</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <select name="year" id="year" required>
+                    <option value="">Select Year</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-btn">Generate Visualization</button>
+        </form>
+    </div>
+
+    <script>
+        // Districts data for each state
+        const districtsData = {
+            "Andhra Pradesh": ["Anantapur", "Chittoor", "East Godavari", "Guntur", "Krishna", "Kurnool", "Prakasam", "Srikakulam", "Visakhapatnam", "Vizianagaram", "West Godavari", "YSR Kadapa"],
+            "Maharashtra": ["Ahmednagar", "Akola", "Amravati", "Aurangabad", "Beed", "Bhandara", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Gondia", "Hingoli", "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban", "Nagpur", "Nanded", "Nandurbar", "Nashik", "Osmanabad", "Palghar", "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"],
+            // Add more states and their districts...
+        };
+
+        // Registration circles data for each district
+        const regCirclesData = {
+           "Thane": ["Kalwa", "Naupada", "Vartak Nagar", "Wagle Estate", "Kopri", "Thane Rural", "Mumbra", "Dombivli", "Kalyan", "Ulhasnagar", "Bhiwandi"],
+           "Mumbai City": ["Azad Maidan", "Colaba", "Cuffe Parade", "Marine Drive", "MRA Marg"],
+            "Pune": ["Hadapsar", "Kothrud", "Swargate", "Vishrantwadi", "Yerawada"],
+            // Add more districts and their registration circles...
+        };
+
+        document.getElementById('state').addEventListener('change', function() {
+            const districts = districtsData[this.value] || [];
+            const districtSelect = document.getElementById('district');
+            districtSelect.innerHTML = '<option value="">Select District</option>' + 
+                districts.map(district => `<option value="${district}">${district}</option>`).join('');
+            
+            // Reset registration circle
+            document.getElementById('reg_circle').innerHTML = '<option value="">Select District First</option>';
+        });
+
+        document.getElementById('district').addEventListener('change', function() {
+            const regCircles = regCirclesData[this.value] || [];
+            const regCircleSelect = document.getElementById('reg_circle');
+            regCircleSelect.innerHTML = '<option value="">Select Registration Circle</option>' + 
+                regCircles.map(circle => `<option value="${circle}">${circle}</option>`).join('');
+        });
+    </script>
+</body>
+</html>
